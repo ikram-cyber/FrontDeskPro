@@ -2,409 +2,468 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FrontDesk Pro</title>
-    <link rel="manifest" href="manifest.json">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>FrontDesk Pro | Enterprise VMS</title>
     <meta name="theme-color" content="#ea580c">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        :root { --primary: #ea580c; --dark: #9a3412; --success: #16a34a; --danger: #dc2626; --bg: #fff7ed; --text: #1f2937; }
-        body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 15px; padding-bottom: 80px; }
+        :root { --primary: #ea580c; --accent: #f97316; --dark: #7c2d12; --success: #16a34a; --danger: #dc2626; --bg: #fff7ed; --text: #1f2937; --card: #ffffff; }
+        * { box-sizing: border-box; font-family: 'Segoe UI', system-ui, sans-serif; }
+        body { background: var(--bg); color: var(--text); margin: 0; padding: 15px; padding-bottom: 90px; font-size: 13px; -webkit-tap-highlight-color: transparent; }
         
-        .card { background: white; padding: 15px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 15px; border: 1px solid #ffedd5; }
-        .dash-box { background: linear-gradient(135deg, var(--primary), var(--dark)); color: white; padding: 15px; border-radius: 12px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; }
-        .dash-item { text-align: center; background: rgba(255,255,255,0.15); padding: 10px; border-radius: 8px; flex: 1; margin: 0 5px; }
-        .dash-item h2 { margin: 5px 0 0 0; font-size: 26px; }
+        .card { background: var(--card); padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); margin-bottom: 16px; border: 1px solid #ffedd5; }
+        .hero-box { background: linear-gradient(135deg, var(--dark), var(--primary)); color: white; border: none; text-align: center; padding: 25px 15px; border-radius: 12px; box-shadow: 0 10px 20px rgba(124, 45, 18, 0.2); margin-bottom: 20px; position: relative; overflow: hidden; }
         
-        h3 { margin-top: 0; color: var(--dark); border-bottom: 2px solid #ffedd5; padding-bottom: 8px; font-size: 16px; }
-        input, select, button, textarea { width: 100%; padding: 11px; margin: 6px 0; border-radius: 8px; border: 1px solid #fdba74; box-sizing: border-box; font-size: 14px; font-family:inherit; }
-        input:focus, select:focus, textarea:focus { border-color: var(--primary); outline: none; box-shadow: 0 0 0 3px rgba(234, 88, 12, 0.1); }
+        h3 { margin: 0 0 15px 0; color: var(--dark); border-bottom: 2px solid #ffedd5; padding-bottom: 10px; font-size: 14px; text-transform: uppercase; font-weight: 900; letter-spacing: 0.5px; display:flex; justify-content:space-between; align-items:center; }
         
-        .btn-row { display: flex; gap: 10px; }
-        .btn-main { background: var(--primary); color: white; border: none; font-weight: bold; }
-        .btn-print { background: #4b5563; color: white; border: none; font-weight: bold; flex:1; }
-        .btn-excel { background: #16a34a; color: white; border: none; font-weight: bold; flex:1; }
-        .btn-action { background: var(--success); color: white; border: none; font-size: 11px; padding: 5px 10px; border-radius: 4px; cursor: pointer; width: auto; font-weight:bold; }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 15px; }
+        .metric-card { background: white; padding: 15px; border-radius: 10px; border: 1px solid #ffedd5; text-align: center; transition: 0.3s; }
+        .m-title { font-size: 10px; color: #9a3412; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
+        .m-val { font-size: 24px; font-weight: 900; margin-top: 8px; color: var(--primary); }
         
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 12px; }
-        th, td { padding: 8px; border-bottom: 1px solid #fed7aa; text-align: left; vertical-align: top; }
-        th { background: #ffedd5; font-weight: 600; color: var(--dark); }
-        .badge-urg { background: #fee2e2; color: #b91c1c; padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: bold; }
-        .badge-nrm { background: #e0f2fe; color: #0369a1; padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: bold; }
+        input, select, button, textarea { width: 100%; padding: 12px; margin: 6px 0 14px 0; border-radius: 8px; border: 1px solid #fdba74; font-size: 13px; outline: none; transition: 0.3s; font-family:inherit; }
+        input:focus, select:focus, textarea:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(234, 88, 12, 0.1); }
+        label { font-size: 11px; font-weight: 800; color: #9a3412; margin-bottom: -4px; display: block; text-transform: uppercase; letter-spacing: 0.5px; }
         
-        .page { display: none; animation: fadeIn 0.3s ease; } .page.active { display: block; }
-        @keyframes fadeIn { from {opacity:0; transform:scale(0.98);} to {opacity:1; transform:scale(1);} }
+        .btn-main { background: var(--primary); color: white; border: none; font-weight: 800; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; }
+        .btn-main:hover { background: var(--dark); }
+        .btn-success { background: var(--success); color: white; border: none; font-weight: bold; cursor: pointer; }
+        .btn-danger { background: var(--danger); color: white; border: none; cursor: pointer; font-weight: bold; }
+        .btn-wa { background: #25D366; color: white; border: none; cursor: pointer; font-weight: bold; }
+        .btn-sm { padding: 6px 10px; font-size: 10px; margin: 0 2px 0 0; border-radius: 6px; font-weight:bold; cursor:pointer; border:none;}
         
-        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: white; display: flex; justify-content: space-around; padding: 10px 5px; box-shadow: 0 -4px 15px rgba(0,0,0,0.08); z-index: 100; border-top: 1px solid #ffedd5; }
-        .nav-item { border: none; background: none; font-size: 11px; color: #fdba74; display: flex; flex-direction: column; align-items: center; cursor: pointer; padding: 5px; width: 20%; }
-        .nav-item.active { color: var(--primary); font-weight: bold; }
-        .nav-item i { font-size: 20px; margin-bottom: 2px; font-style: normal; }
-
-        .header-print { display: none; text-align: center; margin-bottom: 20px; border-bottom: 2px solid #000; padding-bottom: 10px; }
-        .ttd-area { display: none; margin-top: 50px; text-align: right; font-size: 14px; }
-        .ttd-area div { display: inline-block; text-align: center; width: 200px; }
-
+        table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 5px; }
+        th, td { padding: 10px; border-bottom: 1px solid #ffedd5; text-align: left; vertical-align: top; }
+        th { background: #fff7ed; font-weight: 900; color: var(--dark); text-transform: uppercase; font-size: 10px; }
+        
+        .badge { padding: 4px 8px; border-radius: 6px; font-size: 9px; font-weight: 900; text-transform: uppercase; color: white;}
+        .bg-success { background: var(--success); } .bg-danger { background: var(--danger); } .bg-dark { background: var(--dark); } .bg-warn { background: #f59e0b; color:#000; }
+        
+        .page { display: none; animation: fadeIn 0.4s ease; } .active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: white; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid #ffedd5; z-index: 1000; box-shadow: 0 -10px 20px rgba(0,0,0,0.03); }
+        .nav-item { border: none; background: none; font-size: 10px; color: #fdba74; display: flex; flex-direction: column; align-items: center; width: 20%; cursor: pointer; font-weight: 800; padding:0; transition: 0.3s; }
+        .nav-item.active { color: var(--primary); transform: translateY(-2px); }
+        .nav-icon { font-size: 22px; margin-bottom: 4px; }
+        
+        /* VISITOR PASS ID CARD PRINT LAYOUT */
+        .v-pass { display:none; width: 54mm; height: 86mm; border: 2px solid #000; border-radius: 8px; padding: 15px; text-align: center; font-family: 'Arial', sans-serif; position: relative; background: #fff; margin: 0 auto; }
+        .vp-header { background: #000; color: #fff; padding: 10px; border-radius: 4px 4px 0 0; margin: -15px -15px 15px -15px; font-weight: 900; font-size: 16px; letter-spacing: 2px; }
+        .vp-name { font-size: 18px; font-weight: 900; margin: 10px 0 5px 0; text-transform: uppercase; }
+        .vp-inst { font-size: 12px; color: #444; margin-bottom: 15px; font-weight: bold; }
+        .vp-qr { width: 80px; height: 80px; background: url('https://api.qrserver.com/v1/create-qr-code/?size=80x80&data=VISITOR') no-repeat center; background-size: cover; margin: 0 auto 15px auto; border: 2px solid #000; padding: 5px; }
+        .vp-host { font-size: 11px; border-top: 1px dashed #000; padding-top: 10px; margin-top: 10px; font-weight: bold; }
+        .vp-date { font-size: 10px; position: absolute; bottom: 10px; left: 0; width: 100%; text-align: center; }
+        
+        .header-print { display: none; text-align: center; margin-bottom: 20px; border-bottom: 3px double #000; padding-bottom: 10px; }
+        
         @media print {
-            body { background: white; padding: 0; font-size: 11pt; }
-            .card { box-shadow: none; border: none; padding: 0; }
+            body { background: white; padding: 0; margin: 0; font-size:12pt; }
             .no-print, .bottom-nav { display: none !important; }
+            .card { border: none; box-shadow: none; margin: 0; padding: 0; }
             .header-print { display: block; }
-            .ttd-area { display: block; }
             table, th, td { border-color: #000; color: #000; }
             th { background: #f3f4f6 !important; -webkit-print-color-adjust: exact; }
             .page { page-break-after: auto; }
-            .btn-action { display: none; } /* Hide action buttons in print */
+            .v-pass { display: block !important; -webkit-print-color-adjust: exact; }
+            .v-pass .vp-header { background: #000 !important; color: #fff !important; }
         }
     </style>
 </head>
 <body>
 
-<div id="p-home" class="page active">
-    <div class="dash-box no-print">
-        <div class="dash-item"><p style="margin:0; font-size:11px;">Telepon Hari Ini</p><h2 id="v-telp">0</h2></div>
-        <div class="dash-item" style="background: rgba(220,38,38,0.3);"><p style="margin:0; font-size:11px;">Paket Belum Diambil</p><h2 id="v-paket-pending">0</h2></div>
-    </div>
-    
-    <div class="card no-print">
-        <h3>🚨 Paket Menunggu Pengambilan (Di Meja Resepsionis)</h3>
-        <div style="overflow-x:auto;"><div id="view-paket-dash"></div></div>
-    </div>
-
-    <div class="card no-print">
-        <h3>📞 Log Telepon Masuk Terbaru</h3>
-        <div style="overflow-x:auto;"><div id="view-telp-dash"></div></div>
-    </div>
-</div>
-
-<div id="p-telp" class="page">
-    <div class="card no-print">
-        <h3>Input Panggilan Masuk</h3>
-        <div style="display:flex; gap:10px;">
-            <div style="flex:1;"><label style="font-size:12px; font-weight:bold;">Tanggal:</label><input type="date" id="tl-tgl"></div>
-            <div style="flex:1;"><label style="font-size:12px; font-weight:bold;">Jam:</label><input type="time" id="tl-jam"></div>
+    <div id="p-home" class="page active">
+        <div class="hero-box no-print">
+            <h2 id="dash-pt" style="margin:0; font-size: 26px; font-weight:900; letter-spacing:2px;">FRONT DESK PRO</h2>
+            <p style="margin:5px 0 0 0; font-size:12px; font-weight:600; opacity:0.9;">System Date: <span id="dash-tgl"></span></p>
         </div>
-        <input type="text" id="tl-penelepon" placeholder="Nama Penelepon / Perusahaan">
-        <input type="number" id="tl-no" placeholder="Nomor Telepon (Contoh: 0812...)">
-        <input type="text" id="tl-tujuan" placeholder="Ditujukan Kepada (Nama/Divisi)">
-        <select id="tl-urgensi">
-            <option value="Biasa">Pesan Biasa</option>
-            <option value="Penting">🚨 URGENT / Penting!</option>
-        </select>
-        <textarea id="tl-pesan" rows="2" placeholder="Isi Pesan / Keperluan..."></textarea>
-        <button class="btn-main" onclick="catatTelp()">Simpan Log Panggilan</button>
-    </div>
-</div>
-
-<div id="p-paket" class="page">
-    <div class="card no-print">
-        <h3>Penerimaan Paket / Dokumen</h3>
-        <input type="date" id="pk-tgl">
-        <input type="text" id="pk-pengirim" placeholder="Nama Pengirim (Cth: Tokopedia / PT ABC)">
-        <input type="text" id="pk-kurir" placeholder="Nama Kurir (JNE / GoSend / Grab)">
-        <input type="text" id="pk-penerima" placeholder="Nama Karyawan Penerima">
-        <input type="text" id="pk-isi" placeholder="Isi Paket (Contoh: Dokumen, Makanan, Kotak)">
-        <button class="btn-main" onclick="catatPaket()">Terima Paket di Resepsionis</button>
-    </div>
-</div>
-
-<div id="p-kontak" class="page">
-    <div class="card no-print">
-        <h3>Tambah Kontak Internal</h3>
-        <input type="text" id="k-nama" placeholder="Nama Karyawan / Pimpinan">
-        <input type="text" id="k-divisi" placeholder="Departemen (Cth: HRD / Keuangan)">
-        <input type="text" id="k-ext" placeholder="No. Ext / No HP">
-        <button class="btn-main" onclick="catatKontak()">Simpan Kontak</button>
-    </div>
-    
-    <div class="card">
-        <h3>Buku Telepon Internal (Extension)</h3>
-        <input type="text" class="no-print" id="cari-kontak" placeholder="🔍 Cari nama atau departemen..." onkeyup="tampilKontak()">
-        <div style="overflow-x:auto;"><div id="view-kontak"></div></div>
-    </div>
-</div>
-
-<div id="p-laporan" class="page">
-    <div class="card">
-        <div class="header-print">
-            <h2 id="kop-instansi" style="margin:0;">NAMA PERUSAHAAN</h2>
-            <p style="margin:5px 0 0 0;" id="kop-judul">LAPORAN HANDOVER RESEPSIONIS</p>
-            <p style="margin:5px 0 0 0; font-size:12px;" id="kop-tgl"></p>
+        
+        <h3 class="no-print" style="margin-bottom:10px;">📊 Front Desk Analytics</h3>
+        <div class="grid-3 no-print">
+            <div class="metric-card"><div class="m-title">Telepon (Hari Ini)</div><div class="m-val" id="v-telp">0</div></div>
+            <div class="metric-card"><div class="m-title">Paket Pending</div><div class="m-val" id="v-paket-pending" style="color:var(--danger);">0</div></div>
+            <div class="metric-card"><div class="m-title">Tamu (Hari Ini)</div><div class="m-val" id="v-tamu" style="color:var(--success);">0</div></div>
         </div>
 
-        <div class="no-print">
-            <h3>Cetak Handover Shift</h3>
-            <label style="font-size:12px; font-weight:bold;">Pilih Data:</label>
-            <select id="lap-jenis" onchange="tampilLaporan()">
-                <option value="telepon">Log Panggilan Telepon</option>
-                <option value="paket_pending">Daftar Paket BELUM Diambil</option>
-                <option value="paket_all">Riwayat Semua Paket</option>
+        <div class="card no-print">
+            <h3 style="font-size:12px;">📈 Traffic Aktivitas Lobi</h3>
+            <canvas id="fdChart" height="150"></canvas>
+        </div>
+
+        <div class="card no-print" style="border-top:3px solid var(--danger);">
+            <h3>🚨 Peringatan Paket (SLA Alert)</h3>
+            <p style="font-size:10px; color:#64748b; margin-top:-10px;">Paket yang mengendap di meja lebih dari 1 hari.</p>
+            <div id="view-paket-dash" style="overflow-x:auto;"></div>
+        </div>
+    </div>
+
+    <div id="p-telp" class="page">
+        <div class="card no-print">
+            <h3>📞 Register Panggilan Masuk</h3>
+            <div class="grid-2">
+                <div><label>Tanggal</label><input type="date" id="tl-tgl"></div>
+                <div><label>Jam</label><input type="time" id="tl-jam"></div>
+            </div>
+            <div class="grid-2">
+                <div><label>Nama Penelepon</label><input type="text" id="tl-penelepon" placeholder="Instansi / Pribadi"></div>
+                <div><label>Nomor Telepon</label><input type="number" id="tl-no" placeholder="Contoh: 0812..."></div>
+            </div>
+            <label>Ditujukan Kepada (Host)</label>
+            <input type="text" id="tl-tujuan" placeholder="Nama Karyawan / Departemen">
+            <label>Tingkat Urgensi</label>
+            <select id="tl-urgensi" style="font-weight:bold;">
+                <option value="Biasa">🟢 Pesan Biasa</option>
+                <option value="Penting">🔴 URGENT / Penting!</option>
             </select>
-            <div class="btn-row" style="margin-top:15px; margin-bottom:15px;">
-                <button class="btn-print" onclick="window.print()">🖨️ Cetak PDF</button>
-                <button class="btn-excel" onclick="exportExcel()">📊 Export Excel</button>
-            </div>
-            <hr style="border:0; border-top:1px solid #ffedd5; margin-bottom:15px;">
+            <label>Isi Pesan / Keperluan</label>
+            <textarea id="tl-pesan" rows="2"></textarea>
+            <button class="btn-main" onclick="catatTelp()">💾 SIMPAN LOG PANGGILAN</button>
         </div>
-
-        <div style="overflow-x:auto;"><div id="view-laporan"></div></div>
-
-        <div class="ttd-area">
-            <div>
-                <p>Resepsionis Bertugas,</p><br><br><br>
-                <p style="font-weight:bold; text-decoration:underline;" id="ttd-nama">Nama Resepsionis</p>
-            </div>
+        
+        <div class="card no-print">
+            <h3>📜 Riwayat Telepon Terakhir</h3>
+            <div id="view-telp" style="overflow-x:auto;"></div>
         </div>
     </div>
-</div>
 
-<div id="p-seting" class="page no-print">
-    <div class="card">
-        <h3>Pengaturan Front Desk</h3>
-        <label style="font-size:12px; font-weight:bold;">Nama Perusahaan / Gedung:</label>
-        <input type="text" id="set-instansi" placeholder="Contoh: Menara ABC" oninput="simpanSet()">
-        
-        <label style="font-size:12px; font-weight:bold; margin-top:10px; display:block;">Nama Resepsionis (Untuk Cetak):</label>
-        <input type="text" id="set-bos" placeholder="Contoh: Siska / Budi" oninput="simpanSet()">
-        
-        <hr style="margin:20px 0; border:0; border-top:1px solid #ffedd5;">
-        <button onclick="if(confirm('YAKIN HAPUS SEMUA LOG TELEPON DAN PAKET?')) { localStorage.clear(); location.reload(); }" style="background:var(--danger); color:white; padding:15px; font-weight:bold;">⚠️ RESET DATABASE RESEPSIONIS</button>
+    <div id="p-paket" class="page">
+        <div class="card no-print" style="border-top:3px solid var(--primary);">
+            <h3>📦 Penerimaan Dokumen/Paket</h3>
+            <div class="grid-2">
+                <div><label>Tanggal Terima</label><input type="date" id="pk-tgl"></div>
+                <div><label>Kurir / Ekspedisi</label><input type="text" id="pk-kurir" placeholder="JNE/GoSend/dll"></div>
+            </div>
+            <label>Nama Pengirim</label><input type="text" id="pk-pengirim" placeholder="Nama Instansi/Toko">
+            <label>Karyawan Penerima (Tujuan)</label><input type="text" id="pk-penerima" placeholder="Nama Karyawan Internal">
+            <label>Jenis / Isi Paket</label><input type="text" id="pk-isi" placeholder="Contoh: Dokumen HRD / Makanan">
+            <button class="btn-main" onclick="catatPaket()">📥 TERIMA PAKET DI LOBI</button>
+        </div>
+
+        <div class="card no-print">
+            <h3>📑 Daftar Semua Paket</h3>
+            <div id="view-paket-all" style="overflow-x:auto;"></div>
+        </div>
     </div>
-</div>
 
-<div class="bottom-nav">
-    <button class="nav-item active" onclick="bukaTab('home')"><i>🛎️</i>Dash</button>
-    <button class="nav-item" onclick="bukaTab('telp')"><i>📞</i>Telepon</button>
-    <button class="nav-item" onclick="bukaTab('paket')"><i>📦</i>Paket</button>
-    <button class="nav-item" onclick="bukaTab('kontak')"><i>📓</i>Kontak</button>
-    <button class="nav-item" onclick="bukaTab('laporan')"><i>🖨️</i>Laporan</button>
-</div>
-<button onclick="bukaTab('seting')" class="no-print" style="position:fixed; top:15px; right:15px; width:40px; height:40px; border-radius:50%; background:white; box-shadow:0 2px 8px rgba(234,88,12,0.3); border:none; z-index:999; color:var(--primary);">⚙️</button>
+    <div id="p-tamu" class="page">
+        <div class="card no-print">
+            <h3>👥 Visitor Management System (VMS)</h3>
+            <div class="grid-2">
+                <div><label>Tanggal Visit</label><input type="date" id="vms-tgl"></div>
+                <div><label>Jam Masuk</label><input type="time" id="vms-jam"></div>
+            </div>
+            <label>Nama Lengkap Tamu</label><input type="text" id="vms-nama" placeholder="Sesuai KTP">
+            <label>Asal Instansi / Perusahaan</label><input type="text" id="vms-inst" placeholder="Contoh: PT. ABC">
+            <label>Host (Ingin Bertemu Siapa?)</label><input type="text" id="vms-host" placeholder="Nama Karyawan/Pimpinan">
+            <button class="btn-main" onclick="catatVisitor()">💾 REGISTER VISITOR</button>
+        </div>
 
-<script>
-    // Database Lokal
-    let db_telp = JSON.parse(localStorage.getItem('fdpro_telp')) || [];
-    let db_paket = JSON.parse(localStorage.getItem('fdpro_paket')) || [];
-    let db_kontak = JSON.parse(localStorage.getItem('fdpro_kontak')) || [];
-    
-    // Keamanan Tanggal & Waktu
-    let dateObj = new Date();
-    let offset = dateObj.getTimezoneOffset() * 60000;
-    let localISOTime = (new Date(dateObj - offset)).toISOString().slice(0, 10);
-    let currTime = dateObj.toTimeString().slice(0,5);
-    
-    document.getElementById('tl-tgl').value = localISOTime;
-    document.getElementById('tl-tgl').setAttribute('max', localISOTime);
-    document.getElementById('tl-jam').value = currTime;
-    document.getElementById('pk-tgl').value = localISOTime;
-    document.getElementById('pk-tgl').setAttribute('max', localISOTime);
+        <div class="card no-print">
+            <h3>🪪 Tamu Hari Ini (Cetak ID Card)</h3>
+            <div id="view-vms" style="overflow-x:auto;"></div>
+        </div>
 
-    function simpanTelp() { localStorage.setItem('fdpro_telp', JSON.stringify(db_telp)); }
-    function simpanPaket() { localStorage.setItem('fdpro_paket', JSON.stringify(db_paket)); }
-    function simpanKontak() { localStorage.setItem('fdpro_kontak', JSON.stringify(db_kontak)); }
-    function simpanSet() { 
-        localStorage.setItem('fdpro_instansi', document.getElementById('set-instansi').value); 
-        localStorage.setItem('fdpro_bos', document.getElementById('set-bos').value);
-        updateKop(); 
-    }
+        <div id="print-visitor" class="v-pass">
+            <div class="vp-header" id="vp-pt">CORPORATE</div>
+            <div style="font-size:10px; color:#666; font-weight:bold; margin-bottom:5px;">VISITOR ID</div>
+            <div class="vp-qr" id="vp-qr-img"></div>
+            <div class="vp-name" id="vp-nama">NAMA TAMU</div>
+            <div class="vp-inst" id="vp-inst">Instansi Tamu</div>
+            <div class="vp-host" id="vp-host">Host: Budi Santoso</div>
+            <div class="vp-date" id="vp-date">Valid: 01/01/2026 09:00</div>
+        </div>
+    </div>
 
-    function updateKop() {
-        let instansi = localStorage.getItem('fdpro_instansi') || "PERUSAHAAN";
-        let bos = localStorage.getItem('fdpro_bos') || "Resepsionis";
-        document.getElementById('set-instansi').value = localStorage.getItem('fdpro_instansi') || "";
-        document.getElementById('set-bos').value = localStorage.getItem('fdpro_bos') || "";
-        document.getElementById('kop-instansi').innerText = instansi.toUpperCase();
-        document.getElementById('kop-tgl').innerText = "Dicetak pada: " + new Date().toLocaleString('id-ID');
-        document.getElementById('ttd-nama').innerText = bos;
-    }
+    <div id="p-laporan" class="page">
+        <div class="card no-print">
+            <h3>📓 Direktori Internal (WhatsApp Ready)</h3>
+            <div class="grid-2">
+                <div><label>Nama Karyawan</label><input type="text" id="k-nama"></div>
+                <div><label>No. Ext / No HP (WA)</label><input type="number" id="k-ext" placeholder="08..."></div>
+            </div>
+            <label>Departemen / Divisi</label><input type="text" id="k-divisi">
+            <button class="btn-success" onclick="catatKontak()" style="width:100%; padding:12px; border-radius:8px;">💾 TAMBAH KONTAK</button>
+            <hr style="margin:15px 0; border:0; border-top:1px solid #ffedd5;">
+            <input type="text" id="cari-kontak" placeholder="🔍 Cari Direktori..." onkeyup="tampilKontak()">
+            <div id="view-kontak" style="overflow-x:auto;"></div>
+        </div>
 
-    // CATAT LOG TELEPON
-    function catatTelp() {
-        let tgl = document.getElementById('tl-tgl').value;
-        let jam = document.getElementById('tl-jam').value;
-        let pen = document.getElementById('tl-penelepon').value.trim();
-        let no = document.getElementById('tl-no').value.trim();
-        let tuj = document.getElementById('tl-tujuan').value.trim();
-        let urg = document.getElementById('tl-urgensi').value;
-        let psn = document.getElementById('tl-pesan').value.trim();
-        
-        if(!pen || !tuj) return alert("Penelepon dan Tujuan wajib diisi!");
-        
-        db_telp.push({ id: Date.now(), tgl: tgl, jam: jam, pen: pen, no: no, tuj: tuj, urg: urg, psn: psn });
-        document.getElementById('tl-penelepon').value = ""; document.getElementById('tl-no').value = ""; 
-        document.getElementById('tl-tujuan').value = ""; document.getElementById('tl-pesan').value = "";
-        simpanTelp(); refreshDashboard(); alert(`Log Panggilan Berhasil Disimpan!`);
-    }
+        <div class="card">
+            <div class="header-print" style="display:none;">
+                <h2 id="kop-instansi">PT IKRAM CYBER</h2>
+                <p>LAPORAN HANDOVER RESEPSIONIS</p>
+                <p id="kop-tgl" style="font-size:12px;"></p>
+            </div>
+            <div class="no-print">
+                <h3>🖨️ Report & Handover Center</h3>
+                <label>Jenis Laporan Handover</label>
+                <select id="lap-jenis" onchange="tampilLaporan()">
+                    <option value="telepon">Log Panggilan Telepon</option>
+                    <option value="paket">Log Paket / Dokumen</option>
+                    <option value="tamu">Log Visitor (Buku Tamu)</option>
+                </select>
+                <div class="grid-2" style="margin-top:10px;">
+                    <button class="btn-print" onclick="window.print()">🖨️ CETAK PDF</button>
+                    <button class="btn-success" onclick="exportExcel()">📊 EXCEL</button>
+                </div>
+            </div>
+            <div id="view-laporan"></div>
+        </div>
+    </div>
 
-    // CATAT PAKET
-    function catatPaket() {
-        let tgl = document.getElementById('pk-tgl').value;
-        let png = document.getElementById('pk-pengirim').value.trim();
-        let kur = document.getElementById('pk-kurir').value.trim();
-        let pnr = document.getElementById('pk-penerima').value.trim();
-        let isi = document.getElementById('pk-isi').value.trim() || "Paket/Dokumen";
-        
-        if(!png || !pnr) return alert("Pengirim dan Penerima wajib diisi!");
+    <div id="p-seting" class="page no-print">
+        <div class="card">
+            <h3>⚙️ Konfigurasi Front Desk</h3>
+            <label>Nama Gedung / Perusahaan</label><input type="text" id="set-instansi" oninput="simpanSet()">
+            <label>Nama Resepsionis (Shift Aktif)</label><input type="text" id="set-bos" oninput="simpanSet()">
+            <button onclick="if(confirm('CRITICAL WARNING: Semua data Lobi akan dihapus. Lanjutkan?')) { localStorage.clear(); location.reload(); }" style="background:var(--danger); color:white; border:none; padding:12px; font-weight:bold; border-radius:8px; margin-top:20px; width:100%;">🗑️ FACTORY RESET DATABASE</button>
+        </div>
+    </div>
 
-        // status: 0 = pending (di meja), 1 = sudah diambil
-        db_paket.push({ id: Date.now(), tgl: tgl, png: png, kur: kur, pnr: pnr, isi: isi, status: 0 });
-        document.getElementById('pk-pengirim').value = ""; document.getElementById('pk-kurir').value = ""; 
-        document.getElementById('pk-penerima').value = ""; document.getElementById('pk-isi').value = "";
-        simpanPaket(); refreshDashboard(); alert("Paket berhasil dicatat dan diletakkan di Front Desk!");
-    }
+    <div style="text-align: center; padding: 20px; color: #9a3412; font-size: 11px; font-weight: bold; letter-spacing: 1px; margin-bottom: 10px;" class="no-print">&copy; 2026 Ikram Cyber System</div>
 
-    // CATAT KONTAK INTERNAL
-    function catatKontak() {
-        let nama = document.getElementById('k-nama').value.trim();
-        let div = document.getElementById('k-divisi').value.trim();
-        let ext = document.getElementById('k-ext').value.trim();
-        
-        if(!nama || !ext) return alert("Nama dan No Ext wajib diisi!");
-        db_kontak.push({ id: Date.now(), nama: nama, div: div, ext: ext });
-        document.getElementById('k-nama').value = ""; document.getElementById('k-divisi').value = ""; document.getElementById('k-ext').value = "";
-        simpanKontak(); tampilKontak(); alert("Kontak berhasil ditambahkan!");
-    }
+    <nav class="bottom-nav no-print">
+        <div class="nav-item active" onclick="bukaTab('home')"><div class="nav-icon">📊</div>DASH</div>
+        <div class="nav-item" onclick="bukaTab('telp')"><div class="nav-icon">📞</div>CALL</div>
+        <div class="nav-item" onclick="bukaTab('paket')"><div class="nav-icon">📦</div>PAKET</div>
+        <div class="nav-item" onclick="bukaTab('tamu')"><div class="nav-icon">👥</div>VISITOR</div>
+        <div class="nav-item" onclick="bukaTab('laporan')"><div class="nav-icon">🗂️</div>FILE</div>
+    </nav>
+    <button onclick="bukaTab('seting')" class="no-print" style="position:fixed; top:15px; right:15px; width:45px; height:45px; border-radius:50%; background:white; box-shadow:0 4px 15px rgba(0,0,0,0.1); border:1px solid #ffedd5; z-index:999; cursor:pointer; color:var(--primary);">⚙️</button>
 
-    // AMBIL PAKET (Ubah Status)
-    function ambilPaket(id) {
-        if(confirm("Tandai paket ini SUDAH DIAMBIL oleh penerima?")) {
-            let idx = db_paket.findIndex(x => x.id === id);
-            if(idx > -1) {
-                db_paket[idx].status = 1; // Sudah diambil
-                simpanPaket();
-                refreshDashboard();
+    <script>
+        let db_telp = JSON.parse(localStorage.getItem('fdpro_telp')) || [];
+        let db_paket = JSON.parse(localStorage.getItem('fdpro_paket')) || [];
+        let db_kontak = JSON.parse(localStorage.getItem('fdpro_kontak')) || [];
+        let db_vms = JSON.parse(localStorage.getItem('fdpro_visitor')) || [];
+        let chartInstance = null;
+
+        function getNow() {
+            let d = new Date();
+            let offset = d.getTimezoneOffset() * 60000;
+            return new Date(d.getTime() - offset);
+        }
+
+        let isoDate = getNow().toISOString().slice(0, 10);
+        let currTime = getNow().toISOString().slice(11,16);
+
+        document.getElementById('tl-tgl').value = isoDate; document.getElementById('tl-jam').value = currTime;
+        document.getElementById('pk-tgl').value = isoDate;
+        document.getElementById('vms-tgl').value = isoDate; document.getElementById('vms-jam').value = currTime;
+
+        function formatTgl(iso) { if(!iso) return "-"; let p = iso.split('-'); return `${p[2]}/${p[1]}/${p[0]}`; }
+
+        function simpanSemua() {
+            localStorage.setItem('fdpro_telp', JSON.stringify(db_telp));
+            localStorage.setItem('fdpro_paket', JSON.stringify(db_paket));
+            localStorage.setItem('fdpro_kontak', JSON.stringify(db_kontak));
+            localStorage.setItem('fdpro_visitor', JSON.stringify(db_vms));
+            refreshDashboard();
+        }
+
+        function simpanSet() {
+            localStorage.setItem('fdpro_instansi', document.getElementById('set-instansi').value);
+            localStorage.setItem('fdpro_bos', document.getElementById('set-bos').value);
+            refreshDashboard();
+        }
+
+        function catatTelp() {
+            let d = { id: Date.now(), tgl: document.getElementById('tl-tgl').value, jam: document.getElementById('tl-jam').value, pen: document.getElementById('tl-penelepon').value, no: document.getElementById('tl-no').value, tuj: document.getElementById('tl-tujuan').value, urg: document.getElementById('tl-urgensi').value, psn: document.getElementById('tl-pesan').value };
+            if(!d.pen || !d.tuj) return alert("Penelepon dan Tujuan wajib diisi!");
+            db_telp.push(d); simpanSemua(); alert("Log Panggilan Disimpan!");
+            ['tl-penelepon','tl-no','tl-tujuan','tl-pesan'].forEach(id => document.getElementById(id).value = "");
+        }
+
+        function catatPaket() {
+            let d = { id: Date.now(), tgl: document.getElementById('pk-tgl').value, png: document.getElementById('pk-pengirim').value, kur: document.getElementById('pk-kurir').value, pnr: document.getElementById('pk-penerima').value, isi: document.getElementById('pk-isi').value || "Dokumen/Paket", status: 0 };
+            if(!d.png || !d.pnr) return alert("Pengirim dan Penerima wajib diisi!");
+            db_paket.push(d); simpanSemua(); alert("Paket diregistrasi di Lobi!");
+            ['pk-pengirim','pk-kurir','pk-penerima','pk-isi'].forEach(id => document.getElementById(id).value = "");
+        }
+
+        function ambilPaket(id) {
+            if(confirm("Tandai paket ini SUDAH DIAMBIL oleh penerima?")) {
+                let idx = db_paket.findIndex(x => x.id === id);
+                if(idx > -1) { db_paket[idx].status = 1; simpanSemua(); }
             }
         }
-    }
 
-    // FORMAT TANGGAL
-    function formatTgl(iso) {
-        if(!iso) return "-"; let p = iso.split('-'); return `${p[2]}/${p[1]}/${p[0]}`;
-    }
+        function catatVisitor() {
+            let d = { id: Date.now(), tgl: document.getElementById('vms-tgl').value, jam: document.getElementById('vms-jam').value, nama: document.getElementById('vms-nama').value, inst: document.getElementById('vms-inst').value || "Pribadi", host: document.getElementById('vms-host').value };
+            if(!d.nama || !d.host) return alert("Nama Tamu dan Host wajib diisi!");
+            db_vms.push(d); simpanSemua(); alert("Visitor Berhasil Diregistrasi!");
+            ['vms-nama','vms-inst','vms-host'].forEach(id => document.getElementById(id).value = "");
+        }
 
-    // TAMPIL KONTAK
-    function tampilKontak() {
-        let cari = document.getElementById('cari-kontak').value.toLowerCase();
-        let hasil = db_kontak.filter(x => x.nama.toLowerCase().includes(cari) || x.div.toLowerCase().includes(cari));
-        hasil.sort((a,b) => a.nama.localeCompare(b.nama)); // Urut abjad
-        
-        let html = "<table><tr><th>Nama</th><th>Departemen</th><th>No. Ext/HP</th></tr>";
-        if(hasil.length===0) html += "<tr><td colspan='3' align='center'>Kontak Kosong</td></tr>";
-        hasil.forEach(x => { html += `<tr><td><b>${x.nama}</b></td><td>${x.div}</td><td><a href="tel:${x.ext}" style="color:var(--primary); font-weight:bold; text-decoration:none;">📞 ${x.ext}</a></td></tr>`; });
-        html += "</table>";
-        document.getElementById('view-kontak').innerHTML = html;
-    }
+        function catatKontak() {
+            let d = { id: Date.now(), nama: document.getElementById('k-nama').value, div: document.getElementById('k-divisi').value, ext: document.getElementById('k-ext').value };
+            if(!d.nama || !d.ext) return alert("Lengkapi data!");
+            db_kontak.push(d); simpanSemua(); alert("Kontak Tersimpan!");
+            ['k-nama','k-divisi','k-ext'].forEach(id => document.getElementById(id).value = "");
+        }
 
-    // TAMPILKAN LAPORAN (CORE SYSTEM)
-    function tampilLaporan() {
-        let jenis = document.getElementById('lap-jenis').value;
-        let html = "";
-        
-        if(jenis === 'telepon') {
-            document.getElementById('kop-judul').innerText = "LOG PANGGILAN TELEPON (CALL LOG)";
-            let data = db_telp.slice().sort((a,b) => new Date(b.tgl+"T"+b.jam) - new Date(a.tgl+"T"+a.jam)); // Terbaru di atas
-            html = "<table><tr><th>Tgl/Jam</th><th>Penelepon & No</th><th>Pesan Untuk</th><th>Pesan</th></tr>";
-            if(data.length===0) html += "<tr><td colspan='4' align='center'>Data Kosong</td></tr>";
-            data.forEach(x => { 
-                let badge = x.urg === 'Penting' ? "<br><span class='badge-urg'>URGENT</span>" : "";
-                html += `<tr><td>${formatTgl(x.tgl)}<br>${x.jam}</td><td><b>${x.pen}</b><br><span style="font-size:10px;">${x.no}</span></td><td>${x.tuj}${badge}</td><td>${x.psn}</td></tr>`; 
-            });
-            html += "</table>";
+        function cetakVisitorPass(id) {
+            let v = db_vms.find(x => x.id === id);
+            if(!v) return;
+            document.getElementById('vp-pt').innerText = (localStorage.getItem('fdpro_instansi') || "CORPORATE").toUpperCase();
+            document.getElementById('vp-nama').innerText = v.nama;
+            document.getElementById('vp-inst').innerText = v.inst;
+            document.getElementById('vp-host').innerText = "Host: " + v.host;
+            document.getElementById('vp-date').innerText = `Valid: ${formatTgl(v.tgl)} ${v.jam}`;
             
-        } else if(jenis === 'paket_pending' || jenis === 'paket_all') {
-            document.getElementById('kop-judul').innerText = jenis === 'paket_pending' ? "PAKET BELUM DIAMBIL (DI RESEPSIONIS)" : "RIWAYAT PENERIMAAN PAKET";
-            let isPending = jenis === 'paket_pending';
-            let data = db_paket.filter(x => isPending ? x.status === 0 : true).sort((a,b) => new Date(b.tgl) - new Date(a.tgl));
+            // Encode nama tamu untuk QR Code
+            let qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=80x80&data=VISITOR:${v.nama.replace(/\s+/g, '_')}`;
+            document.getElementById('vp-qr-img').style.backgroundImage = `url('${qrUrl}')`;
             
-            html = "<table><tr><th>Tgl Terima</th><th>Penerima</th><th>Pengirim/Kurir</th><th>Isi</th><th>Status</th></tr>";
-            if(data.length===0) html += "<tr><td colspan='5' align='center'>Data Kosong</td></tr>";
-            data.forEach(x => { 
-                let statTxt = x.status === 0 ? "<span class='badge-urg'>BELUM DIAMBIL</span>" : "<span class='badge-nrm' style='background:#dcfce7; color:#166534;'>SUDAH DIAMBIL</span>";
-                let btnAction = x.status === 0 ? `<br><button class="btn-action no-print" style="margin-top:5px;" onclick="ambilPaket(${x.id})">✅ Tandai Diambil</button>` : "";
-                html += `<tr><td>${formatTgl(x.tgl)}</td><td><b>${x.pnr}</b></td><td>${x.png}<br><span style="font-size:10px;">Kurir: ${x.kur}</span></td><td>${x.isi}</td><td>${statTxt}${btnAction}</td></tr>`; 
-            });
-            html += "</table>";
+            document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
+            document.getElementById('p-tamu').style.display = 'block';
+            document.querySelectorAll('#p-tamu .card').forEach(c => c.classList.add('no-print'));
+            
+            window.print();
+            
+            document.querySelectorAll('#p-tamu .card').forEach(c => c.classList.remove('no-print'));
         }
-        
-        document.getElementById('view-laporan').innerHTML = html;
-    }
 
-    // REFRESH DASHBOARD & STATISTIK
-    function refreshDashboard() {
-        updateKop();
-        
-        // Hitung Telepon Hari Ini
-        let telpHariIni = db_telp.filter(x => x.tgl === localISOTime).length;
-        document.getElementById('v-telp').innerText = telpHariIni;
-        
-        // Hitung Paket Pending
-        let paketPending = db_paket.filter(x => x.status === 0);
-        document.getElementById('v-paket-pending').innerText = paketPending.length;
-        
-        // Tampilkan Tabel Dashboard
-        let agHtml = "<table>";
-        if(paketPending.length === 0) {
-            agHtml += "<tr><td align='center' style='color:#9ca3af;'>Meja bersih. Semua paket sudah diambil.</td></tr>";
-        } else {
-            paketPending.forEach(x => {
-                agHtml += `<tr><td style="width:70px;">${formatTgl(x.tgl)}</td><td><b>Penerima: ${x.pnr}</b><br><span style="font-size:10px;">Dari: ${x.png} (${x.kur})</span></td><td align="right"><button class="btn-action" onclick="ambilPaket(${x.id})">Ambil</button></td></tr>`;
+        function hitungHariSLA(tglPaket) {
+            let t1 = new Date(tglPaket);
+            let t2 = new Date(isoDate);
+            return Math.floor((t2 - t1) / (1000 * 60 * 60 * 24));
+        }
+
+        function refreshDashboard() {
+            let inst = localStorage.getItem('fdpro_instansi') || "FRONT DESK PRO";
+            let bos = localStorage.getItem('fdpro_bos') || "Resepsionis";
+            document.getElementById('dash-pt').innerText = inst.toUpperCase();
+            document.getElementById('set-instansi').value = localStorage.getItem('fdpro_instansi') || "";
+            document.getElementById('set-bos').value = localStorage.getItem('fdpro_bos') || "";
+            document.getElementById('dash-tgl').innerText = new Date().toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+            
+            document.getElementById('kop-instansi').innerText = inst.toUpperCase();
+            document.getElementById('ttd-nama').innerText = bos;
+            document.getElementById('kop-tgl').innerText = "Dicetak: " + new Date().toLocaleString('id-ID');
+
+            let telpHariIni = db_telp.filter(x => x.tgl === isoDate).length;
+            let tamuHariIni = db_vms.filter(x => x.tgl === isoDate).length;
+            let paketPending = db_paket.filter(x => x.status === 0);
+            
+            document.getElementById('v-telp').innerText = telpHariIni;
+            document.getElementById('v-tamu').innerText = tamuHariIni;
+            document.getElementById('v-paket-pending').innerText = paketPending.length;
+
+            // Render Paket Dashboard (Dengan SLA Alert)
+            let agHtml = "<table>";
+            if(paketPending.length === 0) agHtml += "<tr><td align='center'>Lobi bersih.</td></tr>";
+            paketPending.sort((a,b) => new Date(a.tgl) - new Date(b.tgl)).forEach(x => {
+                let hariNginap = hitungHariSLA(x.tgl);
+                let stStyle = hariNginap >= 1 ? "color:var(--danger); font-weight:bold;" : "color:var(--dark);";
+                let warning = hariNginap >= 1 ? `<span class='badge bg-danger'>SLA ALERT (${hariNginap} Hari)</span><br>` : "";
+                
+                agHtml += `<tr><td>${formatTgl(x.tgl)}<br>${warning}<span style="${stStyle}">Penerima: <b>${x.pnr}</b></span><br><span style="font-size:10px; color:#64748b;">Dari: ${x.png}</span></td><td align="right" style="vertical-align:middle;"><button class="btn-sm btn-main" onclick="ambilPaket(${x.id})">✅ Ambil</button></td></tr>`;
+            });
+            document.getElementById('view-paket-dash').innerHTML = agHtml + "</table>";
+
+            // Render VMS Hari Ini
+            let vmsHtml = "<table>";
+            let vmsToday = db_vms.filter(x => x.tgl === isoDate);
+            if(vmsToday.length === 0) vmsHtml += "<tr><td align='center'>Belum ada visitor</td></tr>";
+            vmsToday.forEach(x => {
+                vmsHtml += `<tr><td><b>${x.nama}</b><br><span style="font-size:10px;">Host: ${x.host}</span></td><td align="right"><button class="btn-sm btn-print" onclick="cetakVisitorPass(${x.id})">🖨️ Cetak Pass</button></td></tr>`;
+            });
+            document.getElementById('view-vms').innerHTML = vmsHtml + "</table>";
+
+            // Render Log Telp Terakhir
+            let tlHtml = "<table><tr><th>Waktu</th><th>Penelepon & Tujuan</th></tr>";
+            db_telp.slice(-5).reverse().forEach(x => {
+                let badge = x.urg === 'Penting' ? "<span class='badge bg-danger'>URGENT</span>" : "";
+                tlHtml += `<tr><td style="white-space:nowrap;">${formatTgl(x.tgl)}<br><b>${x.jam}</b></td><td><b>${x.pen}</b><br><span style="font-size:10px;">Ke: ${x.tuj}</span> ${badge}</td></tr>`;
+            });
+            document.getElementById('view-telp').innerHTML = tlHtml + "</table>";
+
+            // Render Semua Paket
+            let allPkHtml = "<table><tr><th>Tgl/Pengirim</th><th>Penerima</th><th>Status</th></tr>";
+            db_paket.slice(-10).reverse().forEach(x => {
+                let badge = x.status === 0 ? "<span class='badge bg-danger'>DI LOBI</span>" : "<span class='badge bg-success'>DIAMBIL</span>";
+                allPkHtml += `<tr><td>${formatTgl(x.tgl)}<br><span style="font-size:10px;">${x.png}</span></td><td><b>${x.pnr}</b></td><td>${badge}</td></tr>`;
+            });
+            document.getElementById('view-paket-all').innerHTML = allPkHtml + "</table>";
+
+            renderChart(telpHariIni, paketPending.length, tamuHariIni);
+            tampilKontak();
+            tampilLaporan();
+        }
+
+        function renderChart(tlp, pkt, vms) {
+            const ctx = document.getElementById('fdChart').getContext('2d');
+            if(chartInstance) chartInstance.destroy();
+            chartInstance = new Chart(ctx, {
+                type: 'doughnut',
+                data: { labels: ['Telepon', 'Paket Pending', 'Visitor'], datasets: [{ data: [tlp, pkt, vms], backgroundColor: ['#ea580c', '#dc2626', '#16a34a'], borderWidth: 0 }] },
+                options: { plugins: { legend: { position: 'right', labels: {boxWidth:12, font:{size:10}} } }, cutout: '70%', responsive: true }
             });
         }
-        agHtml += "</table>";
-        document.getElementById('view-paket-dash').innerHTML = agHtml;
 
-        // Tabel Telepon 5 Terbaru
-        let tlHtml = "<table>";
-        let telpTerbaru = db_telp.slice().sort((a,b) => new Date(b.tgl+"T"+b.jam) - new Date(a.tgl+"T"+a.jam)).slice(0, 5);
-        if(telpTerbaru.length === 0) {
-            tlHtml += "<tr><td align='center' style='color:#9ca3af;'>Belum ada telepon masuk</td></tr>";
-        } else {
-            telpTerbaru.forEach(x => {
-                let badge = x.urg === 'Penting' ? "<span class='badge-urg'>URGENT</span>" : "";
-                tlHtml += `<tr><td style="width:70px;">${x.jam}</td><td><b>Dari: ${x.pen}</b><br>Untuk: ${x.tuj} ${badge}</td></tr>`;
+        function tampilKontak() {
+            let cari = document.getElementById('cari-kontak').value.toLowerCase();
+            let html = "<table><tr><th>Nama Karyawan</th><th>Aksi Cepat</th></tr>";
+            db_kontak.filter(x => x.nama.toLowerCase().includes(cari) || x.div.toLowerCase().includes(cari)).sort((a,b)=>a.nama.localeCompare(b.nama)).forEach(x => {
+                let isHp = x.ext.startsWith('08') || x.ext.startsWith('62');
+                let waNo = x.ext.startsWith('0') ? '62' + x.ext.substring(1) : x.ext;
+                let btnWa = isHp ? `<button class="btn-sm btn-wa" onclick="window.open('https://wa.me/${waNo}', '_blank')">WhatsApp</button>` : "";
+                
+                html += `<tr><td><b style="color:var(--dark);">${x.nama}</b><br><span style="font-size:10px; color:#64748b;">${x.div}</span></td><td align="right"><a href="tel:${x.ext}"><button class="btn-sm btn-main">Call Ext</button></a> ${btnWa}</td></tr>`;
             });
+            document.getElementById('view-kontak').innerHTML = html + "</table>";
         }
-        tlHtml += "</table>";
-        document.getElementById('view-telp-dash').innerHTML = tlHtml;
-        
-        tampilKontak();
-        tampilLaporan();
-    }
 
-    // EXPORT EXCEL
-    function exportExcel() {
-        let jenis = document.getElementById('lap-jenis').value;
-        let csv = "";
-        let filename = "";
-        
-        if(jenis === 'telepon') {
-            csv = "Tanggal,Jam,Penelepon,Nomor,Tujuan,Urgensi,Pesan\n";
-            db_telp.forEach(x => { csv += `${x.tgl},${x.jam},"${x.pen}","${x.no}","${x.tuj}","${x.urg}","${x.psn}"\n`; });
-            filename = "Log_Telepon_Resepsionis.csv";
-        } else {
-            csv = "Tanggal,Pengirim,Kurir,Penerima,Isi,Status\n";
-            let data = db_paket.filter(x => jenis === 'paket_pending' ? x.status === 0 : true);
-            data.forEach(x => { 
-                let stat = x.status === 0 ? "BELUM DIAMBIL" : "SUDAH DIAMBIL";
-                csv += `${x.tgl},"${x.png}","${x.kur}","${x.pnr}","${x.isi}","${stat}"\n`; 
-            });
-            filename = jenis === 'paket_pending' ? "Paket_Belum_Diambil.csv" : "Riwayat_Paket.csv";
+        function tampilLaporan() {
+            let j = document.getElementById('lap-jenis').value;
+            let html = "<table>";
+            if(j === 'telepon') {
+                html += "<tr><th>Waktu</th><th>Penelepon & Tujuan</th><th>Pesan</th></tr>";
+                db_telp.forEach(x => { html += `<tr><td>${formatTgl(x.tgl)}<br>${x.jam}</td><td><b>${x.pen}</b><br><span style="font-size:10px;">No: ${x.no}</span><br>Ke: ${x.tuj}</td><td>${x.psn}</td></tr>`; });
+            } else if(j === 'paket') {
+                html += "<tr><th>Tgl/Status</th><th>Dari -> Ke</th><th>Isi</th></tr>";
+                db_paket.forEach(x => {
+                    let stat = x.status === 0 ? "<span class='badge bg-danger'>LOBI</span>" : "<span class='badge bg-success'>CLEAR</span>";
+                    html += `<tr><td>${formatTgl(x.tgl)}<br>${stat}</td><td>${x.png}<br><b>-> ${x.pnr}</b></td><td>${x.isi}</td></tr>`;
+                });
+            } else if(j === 'tamu') {
+                html += "<tr><th>Waktu Masuk</th><th>Identitas Visitor</th><th>Host Tujuan</th></tr>";
+                db_vms.forEach(x => { html += `<tr><td>${formatTgl(x.tgl)}<br>${x.jam}</td><td><b>${x.nama}</b><br><span style="font-size:10px;">${x.inst}</span></td><td>${x.host}</td></tr>`; });
+            }
+            document.getElementById('view-laporan').innerHTML = html + "</table>";
         }
-        
-        let blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-        let url = URL.createObjectURL(blob);
-        let a = document.createElement("a"); a.href = url;
-        a.download = filename;
-        document.body.appendChild(a); a.click(); document.body.removeChild(a);
-    }
 
-    function bukaTab(id) { 
-        document.querySelectorAll('.page, .nav-item').forEach(e => e.classList.remove('active')); 
-        document.getElementById('p-'+id).classList.add('active'); 
-        
-        let navs = document.querySelectorAll('.bottom-nav .nav-item');
-        navs.forEach(n => { if(n.getAttribute('onclick') === `bukaTab('${id}')`) n.classList.add('active'); });
-    }
-    
-    refreshDashboard();
-</script>
+        function exportExcel() {
+            let j = document.getElementById('lap-jenis').value;
+            let csv = ""; let fn = "";
+            if(j === 'telepon') {
+                csv = "Tanggal,Jam,Penelepon,Nomor,Tujuan,Urgensi,Pesan\n";
+                db_telp.forEach(x => { csv += `${x.tgl},${x.jam},"${x.pen}","${x.no}","${x.tuj}","${x.urg}","${x.psn}"\n`; });
+                fn = "Log_Telepon.csv";
+            } else if(j === 'paket') {
+                csv = "Tanggal,Pengirim,Kurir,Penerima,Isi,Status\n";
+                db_paket.forEach(x => { csv += `${x.tgl},"${x.png}","${x.kur}","${x.pnr}","${x.isi}","${x.status===0?'DI LOBI':'DIAMBIL'}"\n`; });
+                fn = "Log_Paket.csv";
+            } else if(j === 'tamu') {
+                csv = "Tanggal,Jam,Nama Tamu,Instansi,Host Bertemu\n";
+                db_vms.forEach(x => { csv += `${x.tgl},${x.jam},"${x.nama}","${x.inst}","${x.host}"\n`; });
+                fn = "Log_Visitor.csv";
+            }
+            let blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            let a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = fn; a.click();
+        }
+
+        function bukaTab(id) {
+            document.querySelectorAll('.page, .nav-item').forEach(e => e.classList.remove('active'));
+            document.getElementById('p-'+id).classList.add('active');
+            let navs = document.querySelectorAll('.bottom-nav .nav-item');
+            navs.forEach(n => { if(n.getAttribute('onclick').includes(id)) n.classList.add('active'); });
+        }
+
+        refreshDashboard();
+    </script>
 </body>
 </html>
