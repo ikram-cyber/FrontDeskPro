@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>FrontDesk Pro | Enterprise VMS</title>
+    <title>FrontDesk Pro | VMS & Operations Analytics</title>
     <meta name="theme-color" content="#ea580c">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <style>
         :root { --primary: #ea580c; --accent: #f97316; --dark: #7c2d12; --success: #16a34a; --danger: #dc2626; --bg: #fff7ed; --text: #1f2937; --card: #ffffff; }
         * { box-sizing: border-box; font-family: 'Segoe UI', system-ui, sans-serif; }
@@ -19,7 +20,7 @@
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
         .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 15px; }
         .metric-card { background: white; padding: 15px; border-radius: 10px; border: 1px solid #ffedd5; text-align: center; transition: 0.3s; }
-        .m-title { font-size: 10px; color: #9a3412; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
+        .m-title { font-size: 10px; color: #9a3412; font-weight: 900; text-transform: uppercase; letter-spacing: 0.5px; }
         .m-val { font-size: 24px; font-weight: 900; margin-top: 8px; color: var(--primary); }
         
         input, select, button, textarea { width: 100%; padding: 12px; margin: 6px 0 14px 0; border-radius: 8px; border: 1px solid #fdba74; font-size: 13px; outline: none; transition: 0.3s; font-family:inherit; }
@@ -30,7 +31,7 @@
         .btn-main:hover { background: var(--dark); }
         .btn-success { background: var(--success); color: white; border: none; font-weight: bold; cursor: pointer; }
         .btn-danger { background: var(--danger); color: white; border: none; cursor: pointer; font-weight: bold; }
-        .btn-wa { background: #25D366; color: white; border: none; cursor: pointer; font-weight: bold; }
+        .btn-wa { background: #25D366; color: white; border: none; cursor: pointer; font-weight: bold; padding: 4px 8px; border-radius: 4px; font-size: 10px; }
         .btn-sm { padding: 6px 10px; font-size: 10px; margin: 0 2px 0 0; border-radius: 6px; font-weight:bold; cursor:pointer; border:none;}
         
         table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 5px; }
@@ -76,15 +77,37 @@
 
     <div id="p-home" class="page active">
         <div class="hero-box no-print">
+            <div style="position:absolute; right:-10%; top:-20%; font-size:120px; opacity:0.05;">🏢</div>
             <h2 id="dash-pt" style="margin:0; font-size: 26px; font-weight:900; letter-spacing:2px;">FRONT DESK PRO</h2>
-            <p style="margin:5px 0 0 0; font-size:12px; font-weight:600; opacity:0.9;">System Date: <span id="dash-tgl"></span></p>
+            <p style="margin:5px 0 0 0; font-size:11px; font-weight:800; opacity:0.9; text-transform:uppercase;">Operations Analytics Mode</p>
         </div>
         
-        <h3 class="no-print" style="margin-bottom:10px;">📊 Front Desk Analytics</h3>
+        <h3 class="no-print" style="margin-bottom:10px;">🔬 Facility Metrics</h3>
         <div class="grid-3 no-print">
             <div class="metric-card"><div class="m-title">Telepon (Hari Ini)</div><div class="m-val" id="v-telp">0</div></div>
             <div class="metric-card"><div class="m-title">Paket Pending</div><div class="m-val" id="v-paket-pending" style="color:var(--danger);">0</div></div>
             <div class="metric-card"><div class="m-title">Tamu (Hari Ini)</div><div class="m-val" id="v-tamu" style="color:var(--success);">0</div></div>
+        </div>
+
+        <div class="grid-2 no-print" style="margin-bottom:15px;">
+            <div class="metric-card" style="background:#f0fdf4; border-color:#a7f3d0; text-align:left;">
+                <div class="m-title" style="color:#047857;">MTTR (Waktu Pengambilan)</div>
+                <div style="font-size:18px; font-weight:900; color:var(--dark); margin-top:5px;"><span id="v-mttr">0</span> Hari</div>
+                <div style="font-size:9px; color:#64748b; font-weight:bold; margin-top:4px;">Mean Time to Retrieval</div>
+            </div>
+            <div class="metric-card" style="background:#eff6ff; border-color:#bae6fd; text-align:left;">
+                <div class="m-title" style="color:#0369a1;">Traffic Peak Load</div>
+                <div style="font-size:18px; font-weight:900; color:var(--dark); margin-top:5px;"><span id="v-peak">00:00</span></div>
+                <div style="font-size:9px; color:#64748b; font-weight:bold; margin-top:4px;">Jam Sibuk Kedatangan</div>
+            </div>
+        </div>
+
+        <div class="card no-print" style="background:#f8fafc;">
+            <h3 style="font-size:12px; margin-bottom:5px;">📐 Algoritma Efisiensi Lobi</h3>
+            <p style="font-size:10px; color:#64748b; margin-top:0;">Rumus MTTR yang digunakan untuk mengukur efisiensi distribusi logistik internal:</p>
+            <div style="text-align:center; padding:10px; background:white; border:1px solid #e2e8f0; border-radius:8px; overflow-x:auto;">
+                \( MTTR = \frac{1}{N} \sum_{i=1}^{N} (T_{out,i} - T_{in,i}) \)
+            </div>
         </div>
 
         <div class="card no-print">
@@ -94,7 +117,6 @@
 
         <div class="card no-print" style="border-top:3px solid var(--danger);">
             <h3>🚨 Peringatan Paket (SLA Alert)</h3>
-            <p style="font-size:10px; color:#64748b; margin-top:-10px;">Paket yang mengendap di meja lebih dari 1 hari.</p>
             <div id="view-paket-dash" style="overflow-x:auto;"></div>
         </div>
     </div>
@@ -277,7 +299,7 @@
         }
 
         function catatPaket() {
-            let d = { id: Date.now(), tgl: document.getElementById('pk-tgl').value, png: document.getElementById('pk-pengirim').value, kur: document.getElementById('pk-kurir').value, pnr: document.getElementById('pk-penerima').value, isi: document.getElementById('pk-isi').value || "Dokumen/Paket", status: 0 };
+            let d = { id: Date.now(), tgl: document.getElementById('pk-tgl').value, png: document.getElementById('pk-pengirim').value, kur: document.getElementById('pk-kurir').value, pnr: document.getElementById('pk-penerima').value, isi: document.getElementById('pk-isi').value || "Dokumen/Paket", status: 0, tgl_ambil: null };
             if(!d.png || !d.pnr) return alert("Pengirim dan Penerima wajib diisi!");
             db_paket.push(d); simpanSemua(); alert("Paket diregistrasi di Lobi!");
             ['pk-pengirim','pk-kurir','pk-penerima','pk-isi'].forEach(id => document.getElementById(id).value = "");
@@ -286,7 +308,11 @@
         function ambilPaket(id) {
             if(confirm("Tandai paket ini SUDAH DIAMBIL oleh penerima?")) {
                 let idx = db_paket.findIndex(x => x.id === id);
-                if(idx > -1) { db_paket[idx].status = 1; simpanSemua(); }
+                if(idx > -1) { 
+                    db_paket[idx].status = 1; 
+                    db_paket[idx].tgl_ambil = isoDate; // Rekam waktu ambil untuk MTTR
+                    simpanSemua(); 
+                }
             }
         }
 
@@ -313,7 +339,6 @@
             document.getElementById('vp-host').innerText = "Host: " + v.host;
             document.getElementById('vp-date').innerText = `Valid: ${formatTgl(v.tgl)} ${v.jam}`;
             
-            // Encode nama tamu untuk QR Code
             let qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=80x80&data=VISITOR:${v.nama.replace(/\s+/g, '_')}`;
             document.getElementById('vp-qr-img').style.backgroundImage = `url('${qrUrl}')`;
             
@@ -326,10 +351,51 @@
             document.querySelectorAll('#p-tamu .card').forEach(c => c.classList.remove('no-print'));
         }
 
+        // ACADEMIC ENGINE: SLA & MTTR
         function hitungHariSLA(tglPaket) {
             let t1 = new Date(tglPaket);
             let t2 = new Date(isoDate);
             return Math.floor((t2 - t1) / (1000 * 60 * 60 * 24));
+        }
+
+        function hitungMTTR() {
+            let takenPackages = db_paket.filter(x => x.status === 1 && x.tgl_ambil);
+            if(takenPackages.length === 0) return 0;
+            
+            let totalDays = 0;
+            takenPackages.forEach(p => {
+                let d1 = new Date(p.tgl);
+                let d2 = new Date(p.tgl_ambil);
+                let diff = Math.floor((d2 - d1) / (1000 * 60 * 60 * 24));
+                totalDays += (diff >= 0 ? diff : 0);
+            });
+            return (totalDays / takenPackages.length).toFixed(1);
+        }
+
+        // ACADEMIC ENGINE: Peak Hour Analysis
+        function hitungPeakHour() {
+            let hourCounts = {};
+            // Gather all arrival hours from visitors and calls
+            db_vms.forEach(v => {
+                if(!v.jam) return;
+                let h = v.jam.substring(0, 2) + ":00";
+                hourCounts[h] = (hourCounts[h] || 0) + 1;
+            });
+            db_telp.forEach(t => {
+                if(!t.jam) return;
+                let h = t.jam.substring(0, 2) + ":00";
+                hourCounts[h] = (hourCounts[h] || 0) + 1;
+            });
+
+            let peakHour = "-";
+            let maxCount = 0;
+            for (let [hour, count] of Object.entries(hourCounts)) {
+                if(count > maxCount) {
+                    maxCount = count;
+                    peakHour = hour;
+                }
+            }
+            return maxCount > 0 ? peakHour : "00:00";
         }
 
         function refreshDashboard() {
@@ -338,7 +404,6 @@
             document.getElementById('dash-pt').innerText = inst.toUpperCase();
             document.getElementById('set-instansi').value = localStorage.getItem('fdpro_instansi') || "";
             document.getElementById('set-bos').value = localStorage.getItem('fdpro_bos') || "";
-            document.getElementById('dash-tgl').innerText = new Date().toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
             
             document.getElementById('kop-instansi').innerText = inst.toUpperCase();
             document.getElementById('ttd-nama').innerText = bos;
@@ -352,9 +417,12 @@
             document.getElementById('v-tamu').innerText = tamuHariIni;
             document.getElementById('v-paket-pending').innerText = paketPending.length;
 
-            // Render Paket Dashboard (Dengan SLA Alert)
+            // Update Analytics
+            document.getElementById('v-mttr').innerText = hitungMTTR();
+            document.getElementById('v-peak').innerText = hitungPeakHour();
+
             let agHtml = "<table>";
-            if(paketPending.length === 0) agHtml += "<tr><td align='center'>Lobi bersih.</td></tr>";
+            if(paketPending.length === 0) agHtml += "<tr><td align='center'>Lobi bersih. Semua paket telah diserahkan.</td></tr>";
             paketPending.sort((a,b) => new Date(a.tgl) - new Date(b.tgl)).forEach(x => {
                 let hariNginap = hitungHariSLA(x.tgl);
                 let stStyle = hariNginap >= 1 ? "color:var(--danger); font-weight:bold;" : "color:var(--dark);";
@@ -364,16 +432,14 @@
             });
             document.getElementById('view-paket-dash').innerHTML = agHtml + "</table>";
 
-            // Render VMS Hari Ini
             let vmsHtml = "<table>";
             let vmsToday = db_vms.filter(x => x.tgl === isoDate);
             if(vmsToday.length === 0) vmsHtml += "<tr><td align='center'>Belum ada visitor</td></tr>";
             vmsToday.forEach(x => {
-                vmsHtml += `<tr><td><b>${x.nama}</b><br><span style="font-size:10px;">Host: ${x.host}</span></td><td align="right"><button class="btn-sm btn-print" onclick="cetakVisitorPass(${x.id})">🖨️ Cetak Pass</button></td></tr>`;
+                vmsHtml += `<tr><td><b>${x.nama}</b><br><span style="font-size:10px;">Host: ${x.host}</span></td><td align="right"><button class="btn-sm btn-main" style="background:#4b5563;" onclick="cetakVisitorPass(${x.id})">🖨️ Cetak</button></td></tr>`;
             });
             document.getElementById('view-vms').innerHTML = vmsHtml + "</table>";
 
-            // Render Log Telp Terakhir
             let tlHtml = "<table><tr><th>Waktu</th><th>Penelepon & Tujuan</th></tr>";
             db_telp.slice(-5).reverse().forEach(x => {
                 let badge = x.urg === 'Penting' ? "<span class='badge bg-danger'>URGENT</span>" : "";
@@ -381,7 +447,6 @@
             });
             document.getElementById('view-telp').innerHTML = tlHtml + "</table>";
 
-            // Render Semua Paket
             let allPkHtml = "<table><tr><th>Tgl/Pengirim</th><th>Penerima</th><th>Status</th></tr>";
             db_paket.slice(-10).reverse().forEach(x => {
                 let badge = x.status === 0 ? "<span class='badge bg-danger'>DI LOBI</span>" : "<span class='badge bg-success'>DIAMBIL</span>";
@@ -398,9 +463,9 @@
             const ctx = document.getElementById('fdChart').getContext('2d');
             if(chartInstance) chartInstance.destroy();
             chartInstance = new Chart(ctx, {
-                type: 'doughnut',
-                data: { labels: ['Telepon', 'Paket Pending', 'Visitor'], datasets: [{ data: [tlp, pkt, vms], backgroundColor: ['#ea580c', '#dc2626', '#16a34a'], borderWidth: 0 }] },
-                options: { plugins: { legend: { position: 'right', labels: {boxWidth:12, font:{size:10}} } }, cutout: '70%', responsive: true }
+                type: 'bar',
+                data: { labels: ['Calls', 'Packages', 'Visitors'], datasets: [{ label: 'Traffic', data: [tlp, pkt, vms], backgroundColor: ['#ea580c', '#dc2626', '#16a34a'], borderRadius: 4 }] },
+                options: { plugins: { legend: { display: false } }, responsive: true, scales: { y: { beginAtZero: true } } }
             });
         }
 
@@ -410,9 +475,8 @@
             db_kontak.filter(x => x.nama.toLowerCase().includes(cari) || x.div.toLowerCase().includes(cari)).sort((a,b)=>a.nama.localeCompare(b.nama)).forEach(x => {
                 let isHp = x.ext.startsWith('08') || x.ext.startsWith('62');
                 let waNo = x.ext.startsWith('0') ? '62' + x.ext.substring(1) : x.ext;
-                let btnWa = isHp ? `<button class="btn-sm btn-wa" onclick="window.open('https://wa.me/${waNo}', '_blank')">WhatsApp</button>` : "";
-                
-                html += `<tr><td><b style="color:var(--dark);">${x.nama}</b><br><span style="font-size:10px; color:#64748b;">${x.div}</span></td><td align="right"><a href="tel:${x.ext}"><button class="btn-sm btn-main">Call Ext</button></a> ${btnWa}</td></tr>`;
+                let btnWa = isHp ? `<button class="btn-wa" onclick="window.open('https://wa.me/${waNo}', '_blank')"><i class="fab fa-whatsapp"></i> Chat</button>` : "";
+                html += `<tr><td><b style="color:var(--dark);">${x.nama}</b><br><span style="font-size:10px; color:#64748b;">${x.div}</span></td><td align="right"><a href="tel:${x.ext}"><button class="btn-sm btn-main" style="padding:4px 8px;">Call</button></a> ${btnWa}</td></tr>`;
             });
             document.getElementById('view-kontak').innerHTML = html + "</table>";
         }
