@@ -6,49 +6,39 @@
     <title>FrontDesk Pro | VMS & Operations Analytics</title>
     <meta name="theme-color" content="#ea580c">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <style>
         :root { --primary: #ea580c; --accent: #f97316; --dark: #7c2d12; --success: #16a34a; --danger: #dc2626; --bg: #fff7ed; --text: #1f2937; --card: #ffffff; }
         * { box-sizing: border-box; font-family: 'Segoe UI', system-ui, sans-serif; }
         body { background: var(--bg); color: var(--text); margin: 0; padding: 15px; padding-bottom: 90px; font-size: 13px; -webkit-tap-highlight-color: transparent; }
-        
         .card { background: var(--card); padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); margin-bottom: 16px; border: 1px solid #ffedd5; }
         .hero-box { background: linear-gradient(135deg, var(--dark), var(--primary)); color: white; border: none; text-align: center; padding: 25px 15px; border-radius: 12px; box-shadow: 0 10px 20px rgba(124, 45, 18, 0.2); margin-bottom: 20px; position: relative; overflow: hidden; }
-        
         h3 { margin: 0 0 15px 0; color: var(--dark); border-bottom: 2px solid #ffedd5; padding-bottom: 10px; font-size: 14px; text-transform: uppercase; font-weight: 900; letter-spacing: 0.5px; display:flex; justify-content:space-between; align-items:center; }
-        
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
         .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 15px; }
         .metric-card { background: white; padding: 15px; border-radius: 10px; border: 1px solid #ffedd5; text-align: center; transition: 0.3s; }
         .m-title { font-size: 10px; color: #9a3412; font-weight: 900; text-transform: uppercase; letter-spacing: 0.5px; }
         .m-val { font-size: 24px; font-weight: 900; margin-top: 8px; color: var(--primary); }
-        
         input, select, button, textarea { width: 100%; padding: 12px; margin: 6px 0 14px 0; border-radius: 8px; border: 1px solid #fdba74; font-size: 13px; outline: none; transition: 0.3s; font-family:inherit; }
         input:focus, select:focus, textarea:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(234, 88, 12, 0.1); }
         label { font-size: 11px; font-weight: 800; color: #9a3412; margin-bottom: -4px; display: block; text-transform: uppercase; letter-spacing: 0.5px; }
-        
         .btn-main { background: var(--primary); color: white; border: none; font-weight: 800; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; }
         .btn-main:hover { background: var(--dark); }
         .btn-success { background: var(--success); color: white; border: none; font-weight: bold; cursor: pointer; }
         .btn-danger { background: var(--danger); color: white; border: none; cursor: pointer; font-weight: bold; }
         .btn-wa { background: #25D366; color: white; border: none; cursor: pointer; font-weight: bold; padding: 4px 8px; border-radius: 4px; font-size: 10px; }
         .btn-sm { padding: 6px 10px; font-size: 10px; margin: 0 2px 0 0; border-radius: 6px; font-weight:bold; cursor:pointer; border:none;}
-        
         table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 5px; }
         th, td { padding: 10px; border-bottom: 1px solid #ffedd5; text-align: left; vertical-align: top; }
         th { background: #fff7ed; font-weight: 900; color: var(--dark); text-transform: uppercase; font-size: 10px; }
-        
         .badge { padding: 4px 8px; border-radius: 6px; font-size: 9px; font-weight: 900; text-transform: uppercase; color: white;}
         .bg-success { background: var(--success); } .bg-danger { background: var(--danger); } .bg-dark { background: var(--dark); } .bg-warn { background: #f59e0b; color:#000; }
-        
         .page { display: none; animation: fadeIn 0.4s ease; } .active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        
         .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: white; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid #ffedd5; z-index: 1000; box-shadow: 0 -10px 20px rgba(0,0,0,0.03); }
         .nav-item { border: none; background: none; font-size: 10px; color: #fdba74; display: flex; flex-direction: column; align-items: center; width: 20%; cursor: pointer; font-weight: 800; padding:0; transition: 0.3s; }
         .nav-item.active { color: var(--primary); transform: translateY(-2px); }
         .nav-icon { font-size: 22px; margin-bottom: 4px; }
-        
+
         /* VISITOR PASS ID CARD PRINT LAYOUT */
         .v-pass { display:none; width: 54mm; height: 86mm; border: 2px solid #000; border-radius: 8px; padding: 15px; text-align: center; font-family: 'Arial', sans-serif; position: relative; background: #fff; margin: 0 auto; }
         .vp-header { background: #000; color: #fff; padding: 10px; border-radius: 4px 4px 0 0; margin: -15px -15px 15px -15px; font-weight: 900; font-size: 16px; letter-spacing: 2px; }
@@ -57,14 +47,15 @@
         .vp-qr { width: 80px; height: 80px; background: url('https://api.qrserver.com/v1/create-qr-code/?size=80x80&data=VISITOR') no-repeat center; background-size: cover; margin: 0 auto 15px auto; border: 2px solid #000; padding: 5px; }
         .vp-host { font-size: 11px; border-top: 1px dashed #000; padding-top: 10px; margin-top: 10px; font-weight: bold; }
         .vp-date { font-size: 10px; position: absolute; bottom: 10px; left: 0; width: 100%; text-align: center; }
-        
+
         .header-print { display: none; text-align: center; margin-bottom: 20px; border-bottom: 3px double #000; padding-bottom: 10px; }
-        
+        .print-ttd { display: none; text-align: right; margin-top: 40px; }
+
         @media print {
             body { background: white; padding: 0; margin: 0; font-size:12pt; }
             .no-print, .bottom-nav { display: none !important; }
             .card { border: none; box-shadow: none; margin: 0; padding: 0; }
-            .header-print { display: block; }
+            .header-print, .print-ttd { display: block; }
             table, th, td { border-color: #000; color: #000; }
             th { background: #f3f4f6 !important; -webkit-print-color-adjust: exact; }
             .page { page-break-after: auto; }
@@ -81,7 +72,7 @@
             <h2 id="dash-pt" style="margin:0; font-size: 26px; font-weight:900; letter-spacing:2px;">FRONT DESK PRO</h2>
             <p style="margin:5px 0 0 0; font-size:11px; font-weight:800; opacity:0.9; text-transform:uppercase;">Operations Analytics Mode</p>
         </div>
-        
+
         <h3 class="no-print" style="margin-bottom:10px;">🔬 Facility Metrics</h3>
         <div class="grid-3 no-print">
             <div class="metric-card"><div class="m-title">Telepon (Hari Ini)</div><div class="m-val" id="v-telp">0</div></div>
@@ -99,14 +90,6 @@
                 <div class="m-title" style="color:#0369a1;">Traffic Peak Load</div>
                 <div style="font-size:18px; font-weight:900; color:var(--dark); margin-top:5px;"><span id="v-peak">00:00</span></div>
                 <div style="font-size:9px; color:#64748b; font-weight:bold; margin-top:4px;">Jam Sibuk Kedatangan</div>
-            </div>
-        </div>
-
-        <div class="card no-print" style="background:#f8fafc;">
-            <h3 style="font-size:12px; margin-bottom:5px;">📐 Algoritma Efisiensi Lobi</h3>
-            <p style="font-size:10px; color:#64748b; margin-top:0;">Rumus MTTR yang digunakan untuk mengukur efisiensi distribusi logistik internal:</p>
-            <div style="text-align:center; padding:10px; background:white; border:1px solid #e2e8f0; border-radius:8px; overflow-x:auto;">
-                \( MTTR = \frac{1}{N} \sum_{i=1}^{N} (T_{out,i} - T_{in,i}) \)
             </div>
         </div>
 
@@ -143,7 +126,6 @@
             <textarea id="tl-pesan" rows="2"></textarea>
             <button class="btn-main" onclick="catatTelp()">💾 SIMPAN LOG PANGGILAN</button>
         </div>
-        
         <div class="card no-print">
             <h3>📜 Riwayat Telepon Terakhir</h3>
             <div id="view-telp" style="overflow-x:auto;"></div>
@@ -162,7 +144,6 @@
             <label>Jenis / Isi Paket</label><input type="text" id="pk-isi" placeholder="Contoh: Dokumen HRD / Makanan">
             <button class="btn-main" onclick="catatPaket()">📥 TERIMA PAKET DI LOBI</button>
         </div>
-
         <div class="card no-print">
             <h3>📑 Daftar Semua Paket</h3>
             <div id="view-paket-all" style="overflow-x:auto;"></div>
@@ -181,12 +162,10 @@
             <label>Host (Ingin Bertemu Siapa?)</label><input type="text" id="vms-host" placeholder="Nama Karyawan/Pimpinan">
             <button class="btn-main" onclick="catatVisitor()">💾 REGISTER VISITOR</button>
         </div>
-
         <div class="card no-print">
             <h3>🪪 Tamu Hari Ini (Cetak ID Card)</h3>
             <div id="view-vms" style="overflow-x:auto;"></div>
         </div>
-
         <div id="print-visitor" class="v-pass">
             <div class="vp-header" id="vp-pt">CORPORATE</div>
             <div style="font-size:10px; color:#666; font-weight:bold; margin-bottom:5px;">VISITOR ID</div>
@@ -232,6 +211,11 @@
                 </div>
             </div>
             <div id="view-laporan"></div>
+            
+            <div class="print-ttd">
+                <p style="margin-bottom:60px;">Mengetahui / Handover Oleh,</p>
+                <p id="ttd-nama" style="font-weight:bold; text-decoration:underline;">Resepsionis</p>
+            </div>
         </div>
     </div>
 
@@ -253,6 +237,7 @@
         <div class="nav-item" onclick="bukaTab('tamu')"><div class="nav-icon">👥</div>VISITOR</div>
         <div class="nav-item" onclick="bukaTab('laporan')"><div class="nav-icon">🗂️</div>FILE</div>
     </nav>
+    
     <button onclick="bukaTab('seting')" class="no-print" style="position:fixed; top:15px; right:15px; width:45px; height:45px; border-radius:50%; background:white; box-shadow:0 4px 15px rgba(0,0,0,0.1); border:1px solid #ffedd5; z-index:999; cursor:pointer; color:var(--primary);">⚙️</button>
 
     <script>
@@ -308,10 +293,10 @@
         function ambilPaket(id) {
             if(confirm("Tandai paket ini SUDAH DIAMBIL oleh penerima?")) {
                 let idx = db_paket.findIndex(x => x.id === id);
-                if(idx > -1) { 
-                    db_paket[idx].status = 1; 
-                    db_paket[idx].tgl_ambil = isoDate; // Rekam waktu ambil untuk MTTR
-                    simpanSemua(); 
+                if(idx > -1) {
+                    db_paket[idx].status = 1;
+                    db_paket[idx].tgl_ambil = isoDate;
+                    simpanSemua();
                 }
             }
         }
@@ -345,13 +330,10 @@
             document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
             document.getElementById('p-tamu').style.display = 'block';
             document.querySelectorAll('#p-tamu .card').forEach(c => c.classList.add('no-print'));
-            
             window.print();
-            
             document.querySelectorAll('#p-tamu .card').forEach(c => c.classList.remove('no-print'));
         }
 
-        // ACADEMIC ENGINE: SLA & MTTR
         function hitungHariSLA(tglPaket) {
             let t1 = new Date(tglPaket);
             let t2 = new Date(isoDate);
@@ -361,7 +343,6 @@
         function hitungMTTR() {
             let takenPackages = db_paket.filter(x => x.status === 1 && x.tgl_ambil);
             if(takenPackages.length === 0) return 0;
-            
             let totalDays = 0;
             takenPackages.forEach(p => {
                 let d1 = new Date(p.tgl);
@@ -372,10 +353,8 @@
             return (totalDays / takenPackages.length).toFixed(1);
         }
 
-        // ACADEMIC ENGINE: Peak Hour Analysis
         function hitungPeakHour() {
             let hourCounts = {};
-            // Gather all arrival hours from visitors and calls
             db_vms.forEach(v => {
                 if(!v.jam) return;
                 let h = v.jam.substring(0, 2) + ":00";
@@ -386,7 +365,6 @@
                 let h = t.jam.substring(0, 2) + ":00";
                 hourCounts[h] = (hourCounts[h] || 0) + 1;
             });
-
             let peakHour = "-";
             let maxCount = 0;
             for (let [hour, count] of Object.entries(hourCounts)) {
@@ -401,6 +379,7 @@
         function refreshDashboard() {
             let inst = localStorage.getItem('fdpro_instansi') || "FRONT DESK PRO";
             let bos = localStorage.getItem('fdpro_bos') || "Resepsionis";
+            
             document.getElementById('dash-pt').innerText = inst.toUpperCase();
             document.getElementById('set-instansi').value = localStorage.getItem('fdpro_instansi') || "";
             document.getElementById('set-bos').value = localStorage.getItem('fdpro_bos') || "";
@@ -408,7 +387,7 @@
             document.getElementById('kop-instansi').innerText = inst.toUpperCase();
             document.getElementById('ttd-nama').innerText = bos;
             document.getElementById('kop-tgl').innerText = "Dicetak: " + new Date().toLocaleString('id-ID');
-
+            
             let telpHariIni = db_telp.filter(x => x.tgl === isoDate).length;
             let tamuHariIni = db_vms.filter(x => x.tgl === isoDate).length;
             let paketPending = db_paket.filter(x => x.status === 0);
@@ -416,22 +395,20 @@
             document.getElementById('v-telp').innerText = telpHariIni;
             document.getElementById('v-tamu').innerText = tamuHariIni;
             document.getElementById('v-paket-pending').innerText = paketPending.length;
-
-            // Update Analytics
+            
             document.getElementById('v-mttr').innerText = hitungMTTR();
             document.getElementById('v-peak').innerText = hitungPeakHour();
-
+            
             let agHtml = "<table>";
             if(paketPending.length === 0) agHtml += "<tr><td align='center'>Lobi bersih. Semua paket telah diserahkan.</td></tr>";
             paketPending.sort((a,b) => new Date(a.tgl) - new Date(b.tgl)).forEach(x => {
                 let hariNginap = hitungHariSLA(x.tgl);
                 let stStyle = hariNginap >= 1 ? "color:var(--danger); font-weight:bold;" : "color:var(--dark);";
                 let warning = hariNginap >= 1 ? `<span class='badge bg-danger'>SLA ALERT (${hariNginap} Hari)</span><br>` : "";
-                
                 agHtml += `<tr><td>${formatTgl(x.tgl)}<br>${warning}<span style="${stStyle}">Penerima: <b>${x.pnr}</b></span><br><span style="font-size:10px; color:#64748b;">Dari: ${x.png}</span></td><td align="right" style="vertical-align:middle;"><button class="btn-sm btn-main" onclick="ambilPaket(${x.id})">✅ Ambil</button></td></tr>`;
             });
             document.getElementById('view-paket-dash').innerHTML = agHtml + "</table>";
-
+            
             let vmsHtml = "<table>";
             let vmsToday = db_vms.filter(x => x.tgl === isoDate);
             if(vmsToday.length === 0) vmsHtml += "<tr><td align='center'>Belum ada visitor</td></tr>";
@@ -439,7 +416,7 @@
                 vmsHtml += `<tr><td><b>${x.nama}</b><br><span style="font-size:10px;">Host: ${x.host}</span></td><td align="right"><button class="btn-sm btn-main" style="background:#4b5563;" onclick="cetakVisitorPass(${x.id})">🖨️ Cetak</button></td></tr>`;
             });
             document.getElementById('view-vms').innerHTML = vmsHtml + "</table>";
-
+            
             let tlHtml = "<table><tr><th>Waktu</th><th>Penelepon & Tujuan</th></tr>";
             db_telp.slice(-5).reverse().forEach(x => {
                 let badge = x.urg === 'Penting' ? "<span class='badge bg-danger'>URGENT</span>" : "";
